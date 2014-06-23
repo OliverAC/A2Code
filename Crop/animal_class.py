@@ -11,7 +11,7 @@ class Animal:
         self._growth_rate = growth_rate
         self._food_need = food_need
         self._water_need = water_need
-        self._Age = "Baby"
+        self._status = "Baby"
         self._type = "Generic"
         #the above attributesare prefixed with an underscore to indicate
         #that they should not be accesses directly from outwith the class
