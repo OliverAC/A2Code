@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
 
     def display_text(self):
         name = self.text_box.text()
-        self.label.setText("Hello {0}".format(name))
+        self.label.setText("Hello {0}!".format(name))
 
         
 if __name__ == "__main__":
