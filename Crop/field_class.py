@@ -33,6 +33,60 @@ class Field:
     def remove_animal(self,position):
         return self._animals.pop(position)
 
+    def report_contents(self):
+        crop_report = []
+        animal_report = []
+        for crop in self._crops:
+            crop_report.append(crop.report())
+        for animal in self._animals:
+            animal_report.append(animal.report())
+        return {"crops": crop_report, "animals": animal_report}
+
+    def report_need(self):
+        food = 0
+        light = 0
+        water =0
+        for crop in self._crops:
+            needs = crop.needs()
+            if needs["light need"] > light:
+                light = needs["light need"]
+            if needs["water need"] > water:
+                water = needs["water need"]
+        for animal in self._animals:
+            needs = animal.needs()
+            food += needs["Food need"]
+            if needs["water need"] > water:
+                water = needs["water need"]
+        return {"food":food, "light":light, "water":water}
+
+    def grow(self, light, food, water):
+        if len(self._crops)>0:
+            for crop in self._crops:
+                crop.grow(light,water)
+        if len(self._animals) > 0:
+            food_required = 0
+            for animal in self._animals:
+                needs = animal.needs()
+                food_required += needs["Food need"]
+        if food>food_required:
+            additional_food = food - food_required
+            food = food_required
+        else:
+            additional_food = 0
+        for animal in self._animals:
+            needs = animal.needs()
+            if food >= needs["Food need"]:
+                food-= needs["Food need"]
+                feed = needs["Food need"]
+                if additional_food >0:
+                    additional_food-=1
+                    feed +=1
+                    animal.grow(feed,water)
+            
+                              
+
+
+
 def display_crops(crop_list):
     print()
     print("The following crops are in this field:  ")
@@ -87,11 +141,14 @@ def main():
     new_field.plant_crop(Potato())
     new_field.add_animal(Sheep())
     new_field.add_animal(Cow())
-    harvest_crop_from_field(new_field)
-    print(new_field._crops)
-    remove_animal_from_field(new_field)
-    print(new_field._animals)
-    
+    report = new_field.report_contents()
+    print(report["animals"])
+    print()
+    print(report["crops"])
+    report = new_field.report_need()
+    print(report)
+    new_field.grow(10,10,6)
+    print(new_field.report_contents())
     
 
 
